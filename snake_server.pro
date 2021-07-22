@@ -1,6 +1,6 @@
 QT -= gui
 
-CONFIG += c++11 console
+CONFIG += c++14 console
 CONFIG -= app_bundle
 
 # You can make your code fail to compile if it uses deprecated APIs.
@@ -9,6 +9,7 @@ CONFIG -= app_bundle
 
 SOURCES += \
         basicaisnake.cpp \
+        coordinates.cpp \
         field.cpp \
         foodmanager.cpp \
         game.cpp \

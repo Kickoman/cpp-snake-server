@@ -23,6 +23,7 @@ public:
     void setDirection(Direction dir);
 
     int64_t id() const;
+    size_t length() const;
 
 private:
     static constexpr int kDefaultSnakeSize = 3;

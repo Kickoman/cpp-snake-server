@@ -2,6 +2,7 @@
 #include <random>
 #include <cassert>
 #include <QTimer>
+#include <QDebug>
 #include "snake.h"
 
 Field::Field(size_t width, size_t height)
@@ -9,6 +10,16 @@ Field::Field(size_t width, size_t height)
     , _height(height)
 {
     _field.resize(height, std::vector<Cell>(width));
+}
+
+size_t Field::width() const
+{
+    return _width;
+}
+
+size_t Field::height() const
+{
+    return _height;
 }
 
 const Cell &Field::get(size_t x, size_t y) const { return _field[y][x]; }
@@ -38,7 +49,7 @@ Coordinates Field::getFreeCells(size_t count, Orientation orientation)
 {
     const Direction dir = orientation == Orientation::Horizontal ? Direction::East : Direction::South;
 
-    std::default_random_engine engine;
+    static std::default_random_engine engine;
     std::uniform_int_distribution<int> xDistr(0, static_cast<int>(_width) - 1);
     std::uniform_int_distribution<int> yDistr(0, static_cast<int>(_height) - 1);
 
@@ -76,6 +87,7 @@ unsigned int Field::applesCount() const
 void Field::placeApple(Coordinates coordinates)
 {
     assert(get(coordinates).type == CellType::Empty);
+//    qDebug() << "Placed apple to" << coordinates.x << coordinates.y;
     set(coordinates, {CellType::Apple});
     ++_applesCount;
 }
@@ -83,6 +95,7 @@ void Field::placeApple(Coordinates coordinates)
 void Field::consumeApple()
 {
     assert(_applesCount > 0);
+//    qDebug() << "Consuming apple";
     --_applesCount;
 }
 

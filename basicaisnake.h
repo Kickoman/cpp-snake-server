@@ -5,7 +5,7 @@
 #include "game.h"
 #include "snakecontroller.h"
 
-class BasicAISnake : public QObject, SnakeController
+class BasicAISnake : public QObject, public SnakeController
 {
     Q_OBJECT
 public:

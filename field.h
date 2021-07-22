@@ -52,8 +52,8 @@ public:
 
     std::set<Coordinates> getNonEmptyCells() const;
 
-private:
     bool validatePosition(Coordinates pos) const;
+private:
 
     size_t _width;
     size_t _height;

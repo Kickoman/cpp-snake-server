@@ -45,6 +45,8 @@ struct Coordinates
     Coordinates(size_t x, size_t y) : x(static_cast<int>(x)), y(static_cast<int>(y)) {}
 
     bool operator<(const Coordinates &other) const { return x == other.x ? y < other.y : x < other.x; }
+    bool operator==(const Coordinates &other) const { return x == other.x && y == other.y; }
+    bool operator!=(const Coordinates &other) const { return !(*this == other); }
 
     Coordinates shift(Direction direction, int distance) const
     {

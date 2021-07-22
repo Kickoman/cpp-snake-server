@@ -36,7 +36,7 @@ void Snake::setField(std::shared_ptr<Field> field)
         cell = cell.shift(diff.xdir, diff.xdiff);
         cell = cell.shift(diff.ydir, diff.ydiff);
 
-        _field->set(cell, {CellType::Snake});
+        field->set(cell, {CellType::Snake});
     }
 
     _field = std::move(field);
@@ -73,7 +73,10 @@ void Snake::moveHead()
         _snakeCells.push_front(nextPosition);
         // Consume apple if exists
         if (cell.type == CellType::Apple)
+        {
             _satiety++;
+            _field->consumeApple();
+        }
         _field->set(nextPosition, {CellType::Snake});
         _lastMoveDirection = _headDirection;
     }
@@ -99,4 +102,9 @@ void Snake::setDirection(Direction dir)
 int64_t Snake::id() const
 {
     return kSnakeId;
+}
+
+size_t Snake::length() const
+{
+    return _snakeCells.size();
 }

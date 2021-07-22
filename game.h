@@ -2,6 +2,7 @@
 #define GAME_H
 
 #include <QObject>
+#include <QTimer>
 #include "field.h"
 #include "snake.h"
 #include "foodmanager.h"
