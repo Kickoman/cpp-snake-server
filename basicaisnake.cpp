@@ -63,7 +63,7 @@ void BasicAISnake::processUpdate(std::set<Coordinates> updatedCells)
                 Coordinates nxt = current.shift(dir, 1);
 
                 if (snake()->getField()->validatePosition(nxt)
-                    && snake()->getField()->get(nxt).type != CellType::Snake
+                    && !snake()->getField()->get(nxt).isSnake()
                     && currentDistance + 1 < distance[nxt.y][nxt.x])
                 {
                     distance[nxt.y][nxt.x] = currentDistance + 1;

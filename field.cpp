@@ -28,13 +28,14 @@ const Cell &Field::get(Coordinates coordinates) const { return get(size_t(coordi
 
 void Field::set(size_t x, size_t y, Cell cell)
 {
-    if (_field[y][x].type != cell.type)
+    if (_field[y][x] != cell)
     {
-        if (_recordingChanges) _changedCells.insert(Coordinates(x, y));
-        if (cell.type != CellType::Empty)
-            _nonEmptyCells.insert(Coordinates(x, y));
+        Coordinates coordinates(x, y);
+        if (_recordingChanges) _changedCells.insert(coordinates);
+        if (cell.isEmpty())
+            _nonEmptyCells.erase(coordinates);
         else
-            _nonEmptyCells.erase(Coordinates(x, y));
+            _nonEmptyCells.insert(coordinates);
     }
 
     _field[y][x] = cell;
@@ -86,16 +87,14 @@ unsigned int Field::applesCount() const
 
 void Field::placeApple(Coordinates coordinates)
 {
-    assert(get(coordinates).type == CellType::Empty);
-//    qDebug() << "Placed apple to" << coordinates.x << coordinates.y;
-    set(coordinates, {CellType::Apple});
+    assert(get(coordinates).isEmpty());
+    set(coordinates, CellType::Apple);
     ++_applesCount;
 }
 
 void Field::consumeApple()
 {
     assert(_applesCount > 0);
-//    qDebug() << "Consuming apple";
     --_applesCount;
 }
 

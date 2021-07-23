@@ -14,7 +14,8 @@ enum class CellType : int
 {
     Empty       = 0,
     Snake       = 1,
-    Apple       = 2
+    SnakeHead   = 2,
+    Apple       = 3
 };
 
 struct Cell
@@ -22,8 +23,16 @@ struct Cell
     Cell(CellType type = CellType::Empty) : type(type) {}
 
     CellType type = CellType::Empty;
+    int64_t  internalId = -1;
 
-    bool isFree() const { return type != CellType::Snake; }
+    bool operator<(const Cell &other) const
+    { return type != other.type ? static_cast<int>(type) < static_cast<int>(other.type) : internalId < other.internalId; }
+    bool operator==(const Cell &other) const { return type == other.type && internalId == other.internalId; }
+    bool operator!=(const Cell &other) const { return !(*this == other); }
+
+    bool isFree() const { return type != CellType::Snake && type != CellType::SnakeHead; }
+    bool isSnake() const { return type == CellType::Snake || type == CellType::SnakeHead; }
+    bool isEmpty() const { return type == CellType::Empty; }
 };
 
 class Field

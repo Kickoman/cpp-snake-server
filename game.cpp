@@ -61,6 +61,7 @@ void Game::gameTick()
             case CellType::Empty: printf("\u2591"); break;
             case CellType::Apple: printf("\u2573"); break;
             case CellType::Snake: printf("\u2588"); break;
+            case CellType::SnakeHead: printf("\u25CF"); break;
             }
         putchar('\n');
     }

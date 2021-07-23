@@ -31,13 +31,19 @@ void Snake::setField(std::shared_ptr<Field> field)
 
     auto diff = _snakeCells.front().diff(initialPosition);
 
+    Cell snakeCell(CellType::Snake);
+    snakeCell.internalId = id();
     for (auto & cell : _snakeCells)
     {
         cell = cell.shift(diff.xdir, diff.xdiff);
         cell = cell.shift(diff.ydir, diff.ydiff);
 
-        field->set(cell, {CellType::Snake});
+        field->set(cell, snakeCell);
     }
+
+    // set head
+    snakeCell.type = CellType::SnakeHead;
+    field->set(headPosition(), snakeCell);
 
     _field = std::move(field);
 }
@@ -51,7 +57,7 @@ void Snake::leaveField()
 {
     for (auto & cell : _snakeCells)
     {
-        _field->set(cell, {CellType::Empty});
+        _field->set(cell, CellType::Empty);
     }
     _field.reset();
 }
@@ -77,7 +83,13 @@ void Snake::moveHead()
             _satiety++;
             _field->consumeApple();
         }
-        _field->set(nextPosition, {CellType::Snake});
+
+        Cell snakeCell(CellType::SnakeHead);
+        snakeCell.internalId = id();
+        _field->set(nextPosition, snakeCell);
+        snakeCell.type = CellType::Snake;
+        _field->set(headPosition(), snakeCell);
+
         _lastMoveDirection = _headDirection;
     }
 
@@ -88,7 +100,7 @@ void Snake::moveHead()
         if (_snakeCells.size() > kDefaultSnakeSize)
         {
             auto coordinates = _snakeCells.back();
-            _field->set(coordinates, {CellType::Empty});
+            _field->set(coordinates, CellType::Empty);
             _snakeCells.pop_back();
     }
 }
