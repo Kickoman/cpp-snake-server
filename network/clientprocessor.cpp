@@ -21,6 +21,8 @@ ClientProcessor::ClientProcessor(QTcpSocket *socket, Game *game, QObject *parent
     QDataStream out(&data, QIODevice::WriteOnly);
     out.setVersion(QDataStream::Qt_5_0);
     out << type;
+    out << static_cast<quint64>(game->getField()->width());
+    out << static_cast<quint64>(game->getField()->height());
     out << static_cast<quint64>(cells.size());
     for (const auto & cell : cells)
     {
