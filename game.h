@@ -17,6 +17,9 @@ public:
         size_t fieldHeight = 70;
 
         std::chrono::milliseconds timePerTick;
+
+        // Gameplay
+        unsigned int applesCount = 10;
     };
 
     explicit Game(const Config &config, QObject *parent = nullptr);
