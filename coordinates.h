@@ -19,7 +19,7 @@ enum class Orientation : int
 };
 inline Orientation directionOrientation(Direction dir)
 {
-    return static_cast<size_t>(dir) % 2 == 0 ? Orientation::Horizontal : Orientation::Vertical;
+    return static_cast<size_t>(dir) % 2 == 0 ? Orientation::Vertical : Orientation::Horizontal;
 }
 
 struct CoordinatesDiff
@@ -47,6 +47,8 @@ struct Coordinates
     bool operator<(const Coordinates &other) const { return x == other.x ? y < other.y : x < other.x; }
     bool operator==(const Coordinates &other) const { return x == other.x && y == other.y; }
     bool operator!=(const Coordinates &other) const { return !(*this == other); }
+
+    bool isValid() const { return x != -1 && y != -1; }
 
     Coordinates shift(Direction direction, int distance) const
     {

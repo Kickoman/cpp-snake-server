@@ -15,7 +15,7 @@ Game::Game(const Config &config, QObject *parent)
     _field = std::make_shared<Field>(config.fieldWidth, config.fieldHeight);
     _foodManager = std::make_unique<FoodManager>();
     _foodManager->setField(_field);
-    _foodManager->setApplesCount(25);
+    _foodManager->setApplesCount(_config.applesCount);
     _foodManager->restoreApples();
 }
 

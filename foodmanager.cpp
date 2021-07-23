@@ -1,4 +1,5 @@
 #include "foodmanager.h"
+#include <QDebug>
 
 FoodManager::FoodManager()
 {
@@ -21,6 +22,11 @@ void FoodManager::restoreApples()
     while (_field->applesCount() < _requiredApplesCount)
     {
         auto freePlace = _field->getFreeCells(1, Orientation::Horizontal);
+        if (!freePlace.isValid())
+        {
+            qDebug() << "Food manager: No free place left!";
+            return;
+        }
         _field->placeApple(freePlace);
     }
 }

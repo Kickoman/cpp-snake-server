@@ -5,6 +5,12 @@
 #include <QDebug>
 #include "snake.h"
 
+#ifdef NDEBUG
+#define SEED    static_cast<std::default_random_engine::result_type>(time(nullptr))
+#else
+#define SEED    std::default_random_engine::default_seed
+#endif //NDEBUG
+
 Field::Field(size_t width, size_t height)
     : _width(width)
     , _height(height)
@@ -50,7 +56,7 @@ Coordinates Field::getFreeCells(size_t count, Orientation orientation)
 {
     const Direction dir = orientation == Orientation::Horizontal ? Direction::East : Direction::South;
 
-    static std::default_random_engine engine;
+    static std::default_random_engine engine(SEED);
     std::uniform_int_distribution<int> xDistr(0, static_cast<int>(_width) - 1);
     std::uniform_int_distribution<int> yDistr(0, static_cast<int>(_height) - 1);
 
@@ -66,7 +72,8 @@ Coordinates Field::getFreeCells(size_t count, Orientation orientation)
         for (int i = 0; i < int(count) && onlyFree; ++i)
         {
             auto currentCoordinates = coordinates.shift(dir, i);
-            onlyFree &= get(currentCoordinates).type == CellType::Empty;
+            onlyFree &= validatePosition(currentCoordinates)
+                        && get(currentCoordinates).isEmpty();
         }
         if (onlyFree)
             return coordinates;
