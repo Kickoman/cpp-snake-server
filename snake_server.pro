@@ -1,4 +1,5 @@
 QT -= gui
+QT += network
 
 CONFIG += c++14 console
 CONFIG -= app_bundle
@@ -14,6 +15,8 @@ SOURCES += \
         foodmanager.cpp \
         game.cpp \
         main.cpp \
+        network/clientprocessor.cpp \
+        network/server.cpp \
         snake.cpp \
         snakecontroller.cpp
 
@@ -28,5 +31,8 @@ HEADERS += \
     field.h \
     foodmanager.h \
     game.h \
+    network/clientprocessor.h \
+    network/headers.h \
+    network/server.h \
     snake.h \
     snakecontroller.h

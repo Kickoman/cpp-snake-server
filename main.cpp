@@ -2,13 +2,15 @@
 #include <QDebug>
 #include <iostream>
 #include <QTimer>
+#include <QThread>
 #include "game.h"
 #include "basicaisnake.h"
+#include "network/server.h"
 
 int main(int argc, char *argv[])
 {
-//    std::ios_base::sync_with_stdio(false);
     QCoreApplication a(argc, argv);
+
     Game::Config config;
     config.fieldWidth = 170;
     config.fieldHeight = 50;
@@ -25,6 +27,13 @@ int main(int argc, char *argv[])
     ai3->startGame(game);
 
     game->startGame();
+
+    Server *server = new Server();
+    QThread *serverThread = new QThread();
+    server->moveToThread(serverThread);
+    serverThread->start();
+    server->setGame(game);
+    server->startServer(9898);
 
     return a.exec();
 }
