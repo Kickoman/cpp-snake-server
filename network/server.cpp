@@ -10,12 +10,18 @@ Server::Server(QObject *parent) : QObject(parent)
 
 void Server::startServer(quint16 port)
 {
-    server->listen(QHostAddress::Any, port);
+    QMetaObject::invokeMethod(this, "startServerPrivate", Qt::QueuedConnection,
+                              Q_ARG(quint16, port));
 }
 
 void Server::setGame(Game *game)
 {
     this->game = game;
+}
+
+void Server::startServerPrivate(quint16 port)
+{
+    server->listen(QHostAddress::Any, port);
 }
 
 void Server::processNewConnections()

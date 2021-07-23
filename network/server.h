@@ -16,6 +16,7 @@ public:
     void setGame(Game *game);
 
 private slots:
+    void startServerPrivate(quint16 port);
     void processNewConnections();
     void processClientDeath();
 
