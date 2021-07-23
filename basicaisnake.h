@@ -2,6 +2,7 @@
 #define BASICAISNAKE_H
 
 #include <QObject>
+#include <map>
 #include "game.h"
 #include "snakecontroller.h"
 

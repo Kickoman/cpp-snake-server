@@ -76,6 +76,7 @@ void Snake::moveHead()
     if (cell.isFree())
     {
         // Move head
+        auto prevHeadPosition = headPosition();
         _snakeCells.push_front(nextPosition);
         // Consume apple if exists
         if (cell.type == CellType::Apple)
@@ -88,7 +89,7 @@ void Snake::moveHead()
         snakeCell.internalId = id();
         _field->set(nextPosition, snakeCell);
         snakeCell.type = CellType::Snake;
-        _field->set(headPosition(), snakeCell);
+        _field->set(prevHeadPosition, snakeCell);
 
         _lastMoveDirection = _headDirection;
     }

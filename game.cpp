@@ -15,7 +15,7 @@ Game::Game(const Config &config, QObject *parent)
     _field = std::make_shared<Field>(config.fieldWidth, config.fieldHeight);
     _foodManager = std::make_unique<FoodManager>();
     _foodManager->setField(_field);
-    _foodManager->setApplesCount(3);
+    _foodManager->setApplesCount(25);
     _foodManager->restoreApples();
 }
 
@@ -59,9 +59,9 @@ void Game::gameTick()
         for (size_t j = 0; j < _field->width(); ++j)
             switch (_field->get(j, i).type) {
             case CellType::Empty: printf("\u2591"); break;
-            case CellType::Apple: printf("\u2573"); break;
-            case CellType::Snake: printf("\u2588"); break;
-            case CellType::SnakeHead: printf("\u25CF"); break;
+            case CellType::Apple: printf("\033[1;33m\u25CF\033[0m"); break;
+            case CellType::Snake: printf("\033[1;3%ldm\u2588\033[0m", _field->get(j, i).internalId); break;
+            case CellType::SnakeHead: printf("\u2593"); break;
             }
         putchar('\n');
     }

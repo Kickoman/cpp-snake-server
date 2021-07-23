@@ -1,6 +1,7 @@
 #include "basicaisnake.h"
 #include <queue>
 #include <QDebug>
+#include <cassert>
 
 BasicAISnake::BasicAISnake(QObject *parent) : QObject(parent)
 {}
