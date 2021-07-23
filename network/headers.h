@@ -1,9 +1,9 @@
 #ifndef HEADERS_H
 #define HEADERS_H
 
-#include <cstdint>
+#include <QtGlobal>
 
-enum class MessageType : int32_t
+enum class MessageType : qint32
 {
     FullState = 1,
     Update    = 2

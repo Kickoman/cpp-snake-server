@@ -1,4 +1,5 @@
 #include "server.h"
+#include <cassert>
 
 Server::Server(QObject *parent) : QObject(parent)
 {
