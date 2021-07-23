@@ -39,11 +39,11 @@ void BasicAISnake::processUpdate(std::set<Coordinates> updatedCells)
         for (auto & row : distance)
             std::fill(row.begin(), row.end(), INT_MAX);
 
-        Coordinates finish{0, 0};
+        std::list<Coordinates> finishes;
         for (size_t i = 0; i < field.size(); ++i)
             for (size_t j = 0; j < field[i].size(); ++j)
                 if (field[i][j] == CellType::Apple)
-                    finish = Coordinates{j, i};
+                    finishes.push_back(Coordinates{j, i});
 
 //        qDebug() << "BASIC AI: Finish at " << finish.x << " " << finish.y;
 
@@ -72,7 +72,14 @@ void BasicAISnake::processUpdate(std::set<Coordinates> updatedCells)
             }
         }
 
-        if (distance[finish.y][finish.x] == INT_MAX) return vector<Coordinates>{};
+        Coordinates finish{};
+        for (const auto & f : finishes)
+            if (finish.x == -1
+                || distance[finish.y][finish.x] > distance[f.y][f.x])
+                finish = f;
+
+        if (finish.x == -1 ||
+                distance[finish.y][finish.x] == INT_MAX) return vector<Coordinates>{};
 //        qDebug() << "Check finished. Distance to finish: " << distance[finish.y][finish.x];
 
         vector<Coordinates> reversedPath;

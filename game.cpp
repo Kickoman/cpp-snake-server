@@ -1,7 +1,7 @@
 #include "game.h"
 #include <QTimer>
 #include <QDebug>
-#include <iostream>
+#include <cstdio>
 
 Game::Game(const Config &config, QObject *parent)
     : QObject(parent)
@@ -15,7 +15,7 @@ Game::Game(const Config &config, QObject *parent)
     _field = std::make_shared<Field>(config.fieldWidth, config.fieldHeight);
     _foodManager = std::make_unique<FoodManager>();
     _foodManager->setField(_field);
-    _foodManager->setApplesCount(1);
+    _foodManager->setApplesCount(3);
     _foodManager->restoreApples();
 }
 
@@ -53,16 +53,16 @@ void Game::gameTick()
     auto changed = _field->stopRecordingChangedCells();
     emit updated(changed);
 
-    system("clear");
+    printf("\033[%ldA", _field->height());
     for (size_t i = 0; i < _field->height(); ++i)
     {
         for (size_t j = 0; j < _field->width(); ++j)
             switch (_field->get(j, i).type) {
-            case CellType::Empty: std::cout << "."; break;
-            case CellType::Apple: std::cout << "A"; break;
-            case CellType::Snake: std::cout << "X"; break;
+            case CellType::Empty: printf("\u2591"); break;
+            case CellType::Apple: printf("\u2573"); break;
+            case CellType::Snake: printf("\u2588"); break;
             }
-        std::cout << std::endl;
+        putchar('\n');
     }
 
 }
