@@ -27,6 +27,8 @@ public:
     void addSnake(std::shared_ptr<Snake> snake);
     void removeSnake(int64_t id);
 
+    std::shared_ptr<const Field> getField() const;
+
 signals:
     void updated(std::set<Coordinates> updatedCells);
 

@@ -1,8 +1,19 @@
 #include "snakecontroller.h"
 
-void SnakeController::setSnake(std::shared_ptr<Snake> snake)
+SnakeController::SnakeController()
+    : _snake(std::make_shared<Snake>())
+{}
+
+void SnakeController::startGame(Game *game)
 {
-    _snake = std::move(snake);
+    _game = game;
+    game->addSnake(snake());
+    initGame();
+}
+
+const Game *SnakeController::game() const
+{
+    return _game;
 }
 
 std::shared_ptr<Snake> &SnakeController::snake()

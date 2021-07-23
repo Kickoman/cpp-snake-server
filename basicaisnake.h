@@ -12,10 +12,11 @@ class BasicAISnake : public QObject, public SnakeController
 public:
     explicit BasicAISnake(QObject *parent = nullptr);
 
-    void start(Game *game);
-
 public slots:
     void processUpdate(std::set<Coordinates> updatedCells);
+
+protected:
+    void initGame() override;
 
 private:
     std::vector<std::vector<CellType>> field;

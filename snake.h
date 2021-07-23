@@ -14,7 +14,7 @@ public:
     Snake();
 
     void setField(std::shared_ptr<Field> field);
-    std::shared_ptr<const Field> getField() const;
+//    std::shared_ptr<const Field> getField() const;
     void leaveField();
 
     std::deque<Coordinates> cells() const;

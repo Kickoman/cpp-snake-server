@@ -43,6 +43,11 @@ void Game::removeSnake(int64_t id)
     _snakes.erase(snakeRecord);
 }
 
+std::shared_ptr<const Field> Game::getField() const
+{
+    return _field;
+}
+
 void Game::gameTick()
 {
 //    qDebug() << "Game tick";

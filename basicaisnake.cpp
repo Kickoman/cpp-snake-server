@@ -6,28 +6,10 @@
 BasicAISnake::BasicAISnake(QObject *parent) : QObject(parent)
 {}
 
-void BasicAISnake::start(Game *game)
-{
-    size_t h = snake()->getField()->height();
-    size_t w = snake()->getField()->width();
-
-    field.resize(h, std::vector<CellType>(w));
-
-    auto filled = snake()->getField()->getNonEmptyCells();
-    for (const auto & coordinate: filled)
-    {
-        auto cell = snake()->getField()->get(coordinate);
-        field[coordinate.y][coordinate.x] = cell.type;
-    }
-
-    head = snake()->headPosition();
-    connect(game, &Game::updated, this, &BasicAISnake::processUpdate, Qt::QueuedConnection);
-}
-
 void BasicAISnake::processUpdate(std::set<Coordinates> updatedCells)
 {
     for (const auto & cell : updatedCells)
-        field[cell.y][cell.x] = snake()->getField()->get(cell).type;
+        field[cell.y][cell.x] = game()->getField()->get(cell).type;
     head = snake()->headPosition();
 
 
@@ -63,8 +45,8 @@ void BasicAISnake::processUpdate(std::set<Coordinates> updatedCells)
                 Direction dir = static_cast<Direction>(i);
                 Coordinates nxt = current.shift(dir, 1);
 
-                if (snake()->getField()->validatePosition(nxt)
-                    && !snake()->getField()->get(nxt).isSnake()
+                if (game()->getField()->validatePosition(nxt)
+                    && !game()->getField()->get(nxt).isSnake()
                     && currentDistance + 1 < distance[nxt.y][nxt.x])
                 {
                     distance[nxt.y][nxt.x] = currentDistance + 1;
@@ -81,21 +63,17 @@ void BasicAISnake::processUpdate(std::set<Coordinates> updatedCells)
 
         if (finish.x == -1 ||
                 distance[finish.y][finish.x] == INT_MAX) return vector<Coordinates>{};
-//        qDebug() << "Check finished. Distance to finish: " << distance[finish.y][finish.x];
 
         vector<Coordinates> reversedPath;
         while (finish != start)
         {
             reversedPath.push_back(finish);
             auto currentDistance = distance[finish.y][finish.x];
-//            qDebug() << "Calculating reversed path.";
-//            qDebug() << "Current finish: " << finish.x << " " << finish.y;
-//            qDebug() << "Current distance: " << distance[finish.y][finish.x];
             for (int i = 0; i < 4; ++i)
             {
                 auto dir = static_cast<Direction>(i);
                 auto neighbor = finish.shift(dir, 1);
-                if (snake()->getField()->validatePosition(neighbor)
+                if (game()->getField()->validatePosition(neighbor)
                         && distance[neighbor.y][neighbor.x] == currentDistance - 1)
                 {
                     finish = neighbor;
@@ -116,7 +94,22 @@ void BasicAISnake::processUpdate(std::set<Coordinates> updatedCells)
     }
 
     snake()->setDirection(dir);
+}
 
-//    qDebug() << "Direction: " << static_cast<int>(dir) << "; size: " << snake()->length();
-//    qDebug() << "Head: " << snake()->headPosition().x << snake()->headPosition().y;
+void BasicAISnake::initGame()
+{
+    size_t h = game()->getField()->height();
+    size_t w = game()->getField()->width();
+
+    field.resize(h, std::vector<CellType>(w));
+
+    auto filled = game()->getField()->getNonEmptyCells();
+    for (const auto & coordinate: filled)
+    {
+        auto cell = game()->getField()->get(coordinate);
+        field[coordinate.y][coordinate.x] = cell.type;
+    }
+
+    head = snake()->headPosition();
+    connect(game(), &Game::updated, this, &BasicAISnake::processUpdate, Qt::QueuedConnection);
 }
