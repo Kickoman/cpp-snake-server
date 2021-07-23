@@ -48,11 +48,6 @@ void Snake::setField(std::shared_ptr<Field> field)
     _field = std::move(field);
 }
 
-//std::shared_ptr<const Field> Snake::getField() const
-//{
-//    return _field;
-//}
-
 void Snake::leaveField()
 {
     for (auto & cell : _snakeCells)

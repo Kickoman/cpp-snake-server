@@ -64,8 +64,8 @@ public:
     bool validatePosition(Coordinates pos) const;
 private:
 
-    size_t _width;
-    size_t _height;
+    const size_t _width;
+    const size_t _height;
 
     std::vector<std::vector<Cell>> _field;
     unsigned int _applesCount = 0;

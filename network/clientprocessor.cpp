@@ -10,7 +10,6 @@ ClientProcessor::ClientProcessor(QTcpSocket *socket, Game *game, QObject *parent
     this->socket = socket;
     if (socket->state() != QAbstractSocket::ConnectedState)
         qDebug() << "Socket is not connected!";
-//    connect(socket, &QTcpSocket::errorOccurred, this, &ClientProcessor::processConnectionIssue);
     connect(socket, &QTcpSocket::disconnected, this, &ClientProcessor::processConnectionIssue);
     connect(game, &Game::updated, this, &ClientProcessor::processGameUpdate);
 

@@ -19,7 +19,11 @@ protected:
     void initGame() override;
 
 private:
+    std::shared_ptr<const Field> remoteField;
     std::vector<std::vector<CellType>> field;
+    size_t height = 0;
+    size_t width = 0;
+
     Coordinates head;
 };
 

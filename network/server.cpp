@@ -33,6 +33,8 @@ void Server::processNewConnections()
         connect(client, &ClientProcessor::dead,
                 this, &Server::processClientDeath);
         clients.append(client);
+        qDebug() << "Connected new client from" << socket->peerAddress().toString();
+        qDebug() << "Total clients:" << clients.size();
     }
 }
 
@@ -42,4 +44,5 @@ void Server::processClientDeath()
     assert(client);
     clients.removeAll(client);
     client->deleteLater();
+    qDebug() << "Client disconnected. Total left:" << clients.size();
 }

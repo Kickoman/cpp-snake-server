@@ -50,25 +50,10 @@ std::shared_ptr<const Field> Game::getField() const
 
 void Game::gameTick()
 {
-//    qDebug() << "Game tick";
     _field->startRecordingChangedCells();
     for (auto & snakeRecord : _snakes)
         snakeRecord.second->moveHead();
     _foodManager->restoreApples();
     auto changed = _field->stopRecordingChangedCells();
     emit updated(changed);
-
-//    printf("\033[%ldA", _field->height());
-//    for (size_t i = 0; i < _field->height(); ++i)
-//    {
-//        for (size_t j = 0; j < _field->width(); ++j)
-//            switch (_field->get(j, i).type) {
-//            case CellType::Empty: printf("\u2591"); break;
-//            case CellType::Apple: printf("\033[1;33m\u25CF\033[0m"); break;
-//            case CellType::Snake: printf("\033[1;3%ldm\u2588\033[0m", _field->get(j, i).internalId); break;
-//            case CellType::SnakeHead: printf("\u2593"); break;
-//            }
-//        putchar('\n');
-//    }
-
 }

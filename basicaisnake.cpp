@@ -9,7 +9,7 @@ BasicAISnake::BasicAISnake(QObject *parent) : QObject(parent)
 void BasicAISnake::processUpdate(std::set<Coordinates> updatedCells)
 {
     for (const auto & cell : updatedCells)
-        field[cell.y][cell.x] = game()->getField()->get(cell).type;
+        field[cell.uy()][cell.ux()] = remoteField->get(cell).type;
     head = snake()->headPosition();
 
 
@@ -18,9 +18,8 @@ void BasicAISnake::processUpdate(std::set<Coordinates> updatedCells)
     {
         using std::vector;
         using std::queue;
-        vector<vector<int>> distance(field.size(), vector<int>(field.front().size()));
-        for (auto & row : distance)
-            std::fill(row.begin(), row.end(), INT_MAX);
+
+        vector<vector<int>> distance(height, vector<int>(width, INT_MAX));
 
         std::list<Coordinates> finishes;
         for (size_t i = 0; i < field.size(); ++i)
@@ -28,16 +27,14 @@ void BasicAISnake::processUpdate(std::set<Coordinates> updatedCells)
                 if (field[i][j] == CellType::Apple)
                     finishes.push_back(Coordinates{j, i});
 
-//        qDebug() << "BASIC AI: Finish at " << finish.x << " " << finish.y;
-
-        distance[start.y][start.x] = 0;
+        distance[start.uy()][start.ux()] = 0;
 
         queue<Coordinates> toCheck;
         toCheck.push(start);
         while (!toCheck.empty())
         {
             auto current = toCheck.front();
-            auto currentDistance = distance[current.y][current.x];
+            auto currentDistance = distance[current.uy()][current.ux()];
             toCheck.pop();
 
             for (int i = 0; i < 4; ++i)
@@ -45,11 +42,11 @@ void BasicAISnake::processUpdate(std::set<Coordinates> updatedCells)
                 Direction dir = static_cast<Direction>(i);
                 Coordinates nxt = current.shift(dir, 1);
 
-                if (game()->getField()->validatePosition(nxt)
-                    && !game()->getField()->get(nxt).isSnake()
-                    && currentDistance + 1 < distance[nxt.y][nxt.x])
+                if (remoteField->validatePosition(nxt)
+                    && !remoteField->get(nxt).isSnake()
+                    && currentDistance + 1 < distance[nxt.uy()][nxt.ux()])
                 {
-                    distance[nxt.y][nxt.x] = currentDistance + 1;
+                    distance[nxt.uy()][nxt.ux()] = currentDistance + 1;
                     toCheck.push(nxt);
                 }
             }
@@ -57,24 +54,27 @@ void BasicAISnake::processUpdate(std::set<Coordinates> updatedCells)
 
         Coordinates finish{};
         for (const auto & f : finishes)
-            if (finish.x == -1
-                || distance[finish.y][finish.x] > distance[f.y][f.x])
+            if (!finish.isValid() || distance[finish.uy()][finish.ux()] > distance[f.uy()][f.ux()])
                 finish = f;
 
-        if (finish.x == -1 ||
-                distance[finish.y][finish.x] == INT_MAX) return vector<Coordinates>{};
+        if (!finish.isValid() || distance[finish.uy()][finish.ux()] == INT_MAX)
+            return vector<Coordinates>{};
 
         vector<Coordinates> reversedPath;
         while (finish != start)
         {
+            if (reversedPath.size() > 100)
+            {
+                qDebug() << "Shit!";
+            }
             reversedPath.push_back(finish);
-            auto currentDistance = distance[finish.y][finish.x];
+            auto currentDistance = distance[finish.uy()][finish.ux()];
             for (int i = 0; i < 4; ++i)
             {
                 auto dir = static_cast<Direction>(i);
                 auto neighbor = finish.shift(dir, 1);
-                if (game()->getField()->validatePosition(neighbor)
-                        && distance[neighbor.y][neighbor.x] == currentDistance - 1)
+                if (remoteField->validatePosition(neighbor)
+                    && distance[neighbor.uy()][neighbor.ux()] == currentDistance - 1)
                 {
                     finish = neighbor;
                     break;
@@ -98,16 +98,18 @@ void BasicAISnake::processUpdate(std::set<Coordinates> updatedCells)
 
 void BasicAISnake::initGame()
 {
-    size_t h = game()->getField()->height();
-    size_t w = game()->getField()->width();
+    remoteField = game()->getField();
 
-    field.resize(h, std::vector<CellType>(w));
+    height = remoteField->height();
+    width = remoteField->width();
 
-    auto filled = game()->getField()->getNonEmptyCells();
+    field.resize(height, std::vector<CellType>(width));
+
+    auto filled = remoteField->getNonEmptyCells();
     for (const auto & coordinate: filled)
     {
-        auto cell = game()->getField()->get(coordinate);
-        field[coordinate.y][coordinate.x] = cell.type;
+        auto cell = remoteField->get(coordinate);
+        field[coordinate.uy()][coordinate.ux()] = cell.type;
     }
 
     head = snake()->headPosition();
