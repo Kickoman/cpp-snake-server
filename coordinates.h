@@ -3,6 +3,7 @@
 
 #include <array>
 #include <cassert>
+#include <limits>
 
 enum class Direction : size_t
 {

@@ -26,7 +26,8 @@ ClientProcessor::ClientProcessor(QTcpSocket *socket, Game *game, QObject *parent
     for (const auto & cell : cells)
     {
         auto content = game->getField()->get(cell);
-        out << cell.x << cell.y
+        out << static_cast<qint64>(cell.x) 
+            << static_cast<qint64>(cell.y)
             << static_cast<int>(content.type)
             << static_cast<qint64>(content.internalId);
     }
@@ -48,7 +49,8 @@ void ClientProcessor::processGameUpdate(std::set<Coordinates> coordinates)
     for (const auto & cell : coordinates)
     {
         auto content = game->getField()->get(cell);
-        out << cell.x << cell.y
+        out << static_cast<qint64>(cell.x) 
+            << static_cast<qint64>(cell.y)
             << static_cast<int>(content.type)
             << static_cast<qint64>(content.internalId);
     }
