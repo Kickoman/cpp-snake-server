@@ -13,7 +13,7 @@ int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
     QCoreApplication::setApplicationName("Snake server");
-    QCoreApplication::setApplicationVersion("0.1");
+    QCoreApplication::setApplicationVersion("0.2");
 
     QCommandLineParser parser;
     parser.setApplicationDescription("Basic AI Snake server");
@@ -40,6 +40,9 @@ int main(int argc, char *argv[])
         "Number of bot-snakes", "bots", "3");
     parser.addOption(botOpt);
 
+    QCommandLineOption portOpt(QStringList() << "p" << "port",
+        "Port for server to run", "port", "9898");
+
     parser.process(a);
 
     Game::Config config;
@@ -50,7 +53,7 @@ int main(int argc, char *argv[])
 
     unsigned int numberOfBots = parser.value(botOpt).toUInt();
 
-    qDebug() << "Starting server";
+    qDebug() << "Starting game";
     qDebug() << "Field size:" << config.fieldWidth << "x" << config.fieldHeight;
     qDebug() << "Time per tick:" << config.timePerTick.count();
     qDebug() << "Apples count:" << config.applesCount;
@@ -65,7 +68,20 @@ int main(int argc, char *argv[])
         ai->startGame(game);
     }
 
-    qDebug() << "Starting the game...";
+    quint16 port = 9898;
+    if (parser.isSet(portOpt))
+    {
+        bool ok = false;
+        port = parser.value(portOpt).toUShort(&ok);
+        if (!ok)
+        {
+            qDebug() << "Can't parse port" << parser.value(portOpt);
+            qDebug() << "Using default value.";
+            port = 9898;
+        }
+    }
+
+    qDebug() << "Starting server on port" << port;
     game->startGame();
 
     Server *server = new Server();
@@ -73,7 +89,7 @@ int main(int argc, char *argv[])
     server->moveToThread(serverThread);
     serverThread->start();
     server->setGame(game);
-    server->startServer(9898);
+    server->startServer(port);
 
     return a.exec();
 }

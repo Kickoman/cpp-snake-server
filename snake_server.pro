@@ -16,6 +16,7 @@ SOURCES += \
         game.cpp \
         main.cpp \
         network/clientprocessor.cpp \
+        network/gamemessage.cpp \
         network/server.cpp \
         snake.cpp \
         snakecontroller.cpp
@@ -32,6 +33,7 @@ HEADERS += \
     foodmanager.h \
     game.h \
     network/clientprocessor.h \
+    network/gamemessage.h \
     network/headers.h \
     network/server.h \
     snake.h \
