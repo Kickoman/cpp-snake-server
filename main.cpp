@@ -42,6 +42,7 @@ int main(int argc, char *argv[])
 
     QCommandLineOption portOpt(QStringList() << "p" << "port",
         "Port for server to run", "port", "9898");
+    parser.addOption(portOpt);
 
     parser.process(a);
 

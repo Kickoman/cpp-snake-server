@@ -27,6 +27,7 @@ ClientProcessor::ClientProcessor(QTcpSocket *socket, Game *game, QObject *parent
     }
     QByteArray data;
     QBuffer buf(&data);
+    buf.open(QIODevice::WriteOnly);
     GameMessage::serialize(msg, &buf);
     socket->write(data);
 }
@@ -50,6 +51,7 @@ void ClientProcessor::processGameUpdate(std::set<Coordinates> coordinates)
 
     QByteArray data;
     QBuffer buf(&data);
+    buf.open(QIODevice::WriteOnly);
     GameMessage::serialize(msg, &buf);
     socket->write(data);
 }
